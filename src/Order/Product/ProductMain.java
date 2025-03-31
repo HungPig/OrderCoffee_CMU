@@ -4,11 +4,14 @@
  */
 package Order.Product;
 
+import Order.Database.Table.CheckBoxTableHeaderRenderer;
+import Order.Database.Table.TableHeaderAlignment;
 import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.fonts.roboto.FlatRobotoFont;
 import com.formdev.flatlaf.themes.FlatMacDarkLaf;
 import java.awt.Font;
 import javax.swing.UIManager;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -21,6 +24,7 @@ public class ProductMain extends javax.swing.JFrame {
      */
     public ProductMain() {
         initComponents();
+        init();
     }
 
     private void init() {
@@ -42,6 +46,19 @@ public class ProductMain extends javax.swing.JFrame {
                 + "cellFocusColor:$TableHeader.hoverBackground;"
                 + "selectionBackground:$TableHeader.hoverBackground;"
                 + "selectionForeground:$Table.foreground;");
+        jScrollPane1.getVerticalScrollBar().putClientProperty(FlatClientProperties.STYLE, ""
+                + "trackArc:999;"
+                + "trackInsets:3,3,3,3;"
+                + "thumbInsets:3,3,3,3;"
+                + "background:$Table.background;");
+        table.getColumnModel().getColumn(0).setHeaderRenderer(new CheckBoxTableHeaderRenderer(table, 0));
+        table.getTableHeader().setDefaultRenderer(new TableHeaderAlignment(table));
+        TestData();
+    }
+
+    private void TestData() {
+        DefaultTableModel model = (DefaultTableModel)table.getModel();
+        model.addRow(new Object[]{false,1,"Hung Hew","123","123","123"});
     }
 
     /**
@@ -61,16 +78,34 @@ public class ProductMain extends javax.swing.JFrame {
 
         table.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null}
+
             },
             new String [] {
-                "SELECT", "#", "NAME", "STATUS", "DATE", "Title 6"
+                "SELECT", "#", "NAME", "Price", "Stock", "Status"
             }
-        ));
+        ) {
+            Class[] types = new Class [] {
+                java.lang.Boolean.class, java.lang.Object.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+            };
+            boolean[] canEdit = new boolean [] {
+                true, true, false, false, false, true
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        table.getTableHeader().setReorderingAllowed(false);
         jScrollPane1.setViewportView(table);
+        if (table.getColumnModel().getColumnCount() > 0) {
+            table.getColumnModel().getColumn(0).setMaxWidth(50);
+            table.getColumnModel().getColumn(1).setMaxWidth(40);
+            table.getColumnModel().getColumn(4).setResizable(false);
+        }
 
         javax.swing.GroupLayout panelLayout = new javax.swing.GroupLayout(panel);
         panel.setLayout(panelLayout);
