@@ -4,14 +4,21 @@
  */
 package Order.Product;
 
+import Order.Database.Form.Create;
 import Order.Database.Table.CheckBoxTableHeaderRenderer;
 import Order.Database.Table.TableHeaderAlignment;
 import com.formdev.flatlaf.FlatClientProperties;
+import com.formdev.flatlaf.FlatLaf;
+import com.formdev.flatlaf.extras.FlatSVGIcon;
 import com.formdev.flatlaf.fonts.roboto.FlatRobotoFont;
 import com.formdev.flatlaf.themes.FlatMacDarkLaf;
 import java.awt.Font;
 import javax.swing.UIManager;
 import javax.swing.table.DefaultTableModel;
+import raven.popup.DefaultOption;
+import raven.popup.GlassPanePopup;
+import raven.popup.component.SimplePopupBorder;
+import raven.toast.Notifications;
 
 /**
  *
@@ -28,6 +35,8 @@ public class ProductMain extends javax.swing.JFrame {
     }
 
     private void init() {
+        GlassPanePopup.install(this);
+        Notifications.getInstance().setJFrame(this);
         panel.putClientProperty(FlatClientProperties.STYLE, ""
                 + "arc:25;"
                 + "background:$Table.background");
@@ -51,14 +60,26 @@ public class ProductMain extends javax.swing.JFrame {
                 + "trackInsets:3,3,3,3;"
                 + "thumbInsets:3,3,3,3;"
                 + "background:$Table.background;");
+        lblProduct.putClientProperty(FlatClientProperties.STYLE, ""
+                + "font:bold +5;");
+
+        txtSearch.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "Search...");
+        //txtSearch.putClientProperty(FlatClientProperties.TEXT_FIELD_LEADING_ICON, new FlatSVGIcon(""));
+        txtSearch.putClientProperty(FlatClientProperties.STYLE, ""
+                + "arc:15;"
+                + "borderWidth:0;"
+                + "focusWidth:0;"
+                + "innerFocusWidth:0;"
+                + "margin:5,20,5,20;"
+                + "background:$Panel.background");
         table.getColumnModel().getColumn(0).setHeaderRenderer(new CheckBoxTableHeaderRenderer(table, 0));
         table.getTableHeader().setDefaultRenderer(new TableHeaderAlignment(table));
         TestData();
     }
 
     private void TestData() {
-        DefaultTableModel model = (DefaultTableModel)table.getModel();
-        model.addRow(new Object[]{false,1,"Hung Hew","123","123","123"});
+        DefaultTableModel model = (DefaultTableModel) table.getModel();
+        model.addRow(new Object[]{false, 1, "Hung Hew", "123", "123", "123"});
     }
 
     /**
@@ -73,6 +94,11 @@ public class ProductMain extends javax.swing.JFrame {
         panel = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         table = new javax.swing.JTable();
+        txtSearch = new javax.swing.JTextField();
+        lblProduct = new javax.swing.JLabel();
+        btnDelete = new javax.swing.JButton();
+        btnEdit = new javax.swing.JButton();
+        btnCreate = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -107,20 +133,53 @@ public class ProductMain extends javax.swing.JFrame {
             table.getColumnModel().getColumn(4).setResizable(false);
         }
 
+        lblProduct.setText("Product");
+
+        btnDelete.setText("Delete");
+
+        btnEdit.setText("Edit");
+
+        btnCreate.setText("Create");
+        btnCreate.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCreateActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout panelLayout = new javax.swing.GroupLayout(panel);
         panel.setLayout(panelLayout);
         panelLayout.setHorizontalGroup(
             panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 761, Short.MAX_VALUE)
+                .addGroup(panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 761, Short.MAX_VALUE)
+                    .addGroup(panelLayout.createSequentialGroup()
+                        .addComponent(lblProduct)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(panelLayout.createSequentialGroup()
+                        .addComponent(txtSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 255, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnCreate)
+                        .addGap(1, 1, 1)
+                        .addComponent(btnEdit)
+                        .addGap(1, 1, 1)
+                        .addComponent(btnDelete)))
                 .addContainerGap())
         );
         panelLayout.setVerticalGroup(
             panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelLayout.createSequentialGroup()
-                .addGap(20, 20, 20)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 391, Short.MAX_VALUE)
+                .addGap(10, 10, 10)
+                .addComponent(lblProduct)
+                .addGap(18, 18, 18)
+                .addGroup(panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnDelete)
+                    .addComponent(btnEdit)
+                    .addComponent(btnCreate))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 390, Short.MAX_VALUE)
                 .addGap(10, 10, 10))
         );
 
@@ -144,11 +203,31 @@ public class ProductMain extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnCreateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCreateActionPerformed
+        Create create = new Create();
+        DefaultOption option = new DefaultOption() {
+            @Override
+            public boolean closeWhenClickOutside() {
+                return true;
+            }
+        };
+        String action[] = new String[]{"Cancel", "Save"};
+        GlassPanePopup.showPopup(new SimplePopupBorder(create, "Create Employee", action, (pc, i) -> {
+            if(i == 1)
+            {
+                //save
+            } else {
+                pc.closePopup();
+            }
+        }),option);
+    }//GEN-LAST:event_btnCreateActionPerformed
+
     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
         FlatRobotoFont.install();
+        FlatLaf.registerCustomDefaultsSource("Order.Database.Theme");
         UIManager.put("defaultFont", new Font(FlatRobotoFont.FAMILY, Font.PLAIN, 13));
         FlatMacDarkLaf.setup();
         java.awt.EventQueue.invokeLater(new Runnable() {
@@ -159,8 +238,14 @@ public class ProductMain extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnCreate;
+    private javax.swing.JButton btnDelete;
+    private javax.swing.JButton btnEdit;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel lblProduct;
     private javax.swing.JPanel panel;
     private javax.swing.JTable table;
+    private javax.swing.JTextField txtSearch;
     // End of variables declaration//GEN-END:variables
+
 }
