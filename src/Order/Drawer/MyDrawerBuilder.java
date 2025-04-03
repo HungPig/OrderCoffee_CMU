@@ -28,39 +28,26 @@ public class MyDrawerBuilder extends SimpleDrawerBuilder {
     @Override
     public SimpleMenuOption getSimpleMenuOption() {
         String menus[][] = {
-            {"~MAIN~"},
+            {"~MASTER DATA~"},
+            {"Products", "Product List", "Categories"},
+            {"Settings"},
+            {"~MAIN MENU~"},
             {"Dashboard"},
-            {"~WEB APP~"},
-            {"Email", "Inbox", "Read", "Compost"},
-            {"Chat"},
-            {"Calendar"},
-            {"~COMPONENT~"},
-            {"Advanced UI", "Cropper", "Owl Carousel", "Sweet Alert"},
-            {"Forms", "Basic Elements", "Advanced Elements", "SEditors", "Wizard"},
-            {"~OTHER~"},
-            {"Charts", "Apex", "Flot", "Sparkline"},
-            {"Icons", "Feather Icons", "Flag Icons", "Mdi Icons"},
-            {"Special Pages", "Blank page", "Faq", "Invoice", "Profile", "Pricing", "Timeline"},
-            {"Logout"},};
+            {"Orders"},
+            {"Sign Out"},};
 
         
         String icons[] = {
+            "product.svg",
+            "setting.svg",
             "dashboard.svg",
-            "email.svg",
-            "chat.svg",
-            "calendar.svg",
-            "ui.svg",
-            "forms.svg",
-            "chart.svg",
-            "icon.svg",
-            "page.svg",
-            "logout.svg",}; 
+            "order.svg",}; 
 
         return new SimpleMenuOption()
                 .setMenus(menus)
                 .setIcons(icons)
                 .setBaseIconPath("Order/drawer/icon")
-                .setIconScale(0.5f)
+                .setIconScale(0.03f)
                 .addMenuEvent(new MenuEvent() {
             @Override
             public void selected(MenuAction action, int index, int subIndex) {
